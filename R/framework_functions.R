@@ -67,6 +67,8 @@ createTrainTestTempate <- function(input_data,
                                    training_length,
                                    test_length,
                                    unavailability_period_length = days(0)) {
+  data_list <- NULL
+
   tibble(
     train_date = train_date_points,
     data_list = map(
