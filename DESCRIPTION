@@ -1,10 +1,15 @@
 Package: framba
 Type: Package
 Title: Time series models backtest framework
-Version: 0.1.0
+Version: 0.0.1
 Authors@R: person("Zdenek", "Vesely", email = "zd.vesely@gmail.com",
   role = c("aut", "cre"))
 Description: Framework for time series model backtesting Can be applied on custom data series models to evaluate the precision and other metrics stability throughout the time as well as parameters stability.
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
+RoxygenNote: 6.1.1
+Imports:
+    dplyr (>= 0.8.3),
+    purrr (>= 0.3.2),
+    lubridate (>= 1.7.4)

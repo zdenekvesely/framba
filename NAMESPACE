@@ -1,1 +1,9 @@
 exportPattern("^[[:alpha:]]+")
+import(dplyr)
+import(purrr)
+importFrom(lubridate, hours)
+importFrom(lubridate, days)
+importFrom(lubridate, weeks)
+importFrom(lubridate, '%m+%')
+importFrom(lubridate, '%m-%')
+
