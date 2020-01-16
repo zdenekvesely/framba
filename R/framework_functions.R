@@ -58,7 +58,7 @@ divideTrainTest <- function(input_data,
 #' @param unavailability_period_length period object, length of data
 #'   unavailability before train_date
 #'
-#' @return nessted tible with columns: train_date (date), train_data (tibble),
+#' @return nested tible with columns: train_date (date), train_data (tibble),
 #'   test_data (tibble)
 #' @export
 createTrainTestTempate <- function(input_data,
@@ -92,17 +92,17 @@ createTrainTestTempate <- function(input_data,
 
 #' Evaluate Models On Data Template
 #'
-#' @param data_template output of \code{createTrainTestTempate}, nessted tible
+#' @param data_template output of \code{createTrainTestTempate}, nested tible
 #'   with columns: train_date (date), train_data (tibble), test_data (tibble)
 #' @param models_list named list of model functions. Model function is a
 #'   function with two arguments - train_data and test_data. It outputs list
 #'   with these elements: forecasted_data - tibble similar to test_data but with
-#'   added (forecasted) the respose column, model_object (can be NULL), model
+#'   added (forecasted) the response column, model_object (can be NULL), model
 #'   parameters - tibble with columns "par_name" and "par_value" (trained model
 #'   parameters, can be empty tibble)
 #' @param verbose logical, if TRUE, messages about the progress will be printed
 #'
-#' @return nessted tibble with evaluated model outputs
+#' @return nested tibble with evaluated model outputs
 #' @export
 evaluateModelsOnDataTemplate <- function(data_template,
                                          models_list,
@@ -143,3 +143,46 @@ evaluateModelsOnDataTemplate <- function(data_template,
   model_results_data
 }
 
+#' evaluate model on past data at defined data points
+#'
+#' @param input_data data frame including columns 'date'
+#' @param models_list named list of model functions. Model function is a
+#'   function with two arguments - train_data and test_data. It outputs list
+#'   with these elements: forecasted_data - tibble similar to test_data but with
+#'   added (forecasted) the response column, model_object (can be NULL), model
+#'   parameters - tibble with columns "par_name" and "par_value" (trained model
+#'   parameters, can be empty tibble)
+#' @param response_var_name name of the response variable (it will be omitted
+#'   from test data)
+#' @param train_date_points vector of dates - the moments of the training
+#' @param training_length period object, length of the training period
+#' @param test_length period object,length of the test period
+#' @param unavailability_period_length period object, length of data
+#'   unavailability before train_date
+#' @param verbose logical, if TRUE, messages about the progress will be printed
+#'
+#' @return nested tibble with evaluated model outputs
+#' @export
+evaluateModels <- function(input_data,
+                           models_list,
+                           response_var_name,
+                           train_date_points,
+                           training_length,
+                           test_length,
+                           unavailability_period_length = days(0),
+                           verbose = TRUE) {
+
+  data_template <-
+    createTrainTestTempate(
+      input_data = input_data,
+      response_var_name = response_var_name,
+      train_date_points = train_date_points,
+      training_length = training_length,
+      test_length = test_length,
+      unavailability_period_length = unavailability_period_length
+    )
+
+  evaluateModelsOnDataTemplate(data_template = data_template,
+                               models_list = models_list,
+                               verbose = verbose)
+}
