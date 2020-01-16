@@ -90,3 +90,56 @@ createTrainTestTempate <- function(input_data,
 }
 
 
+#' Evaluate Models On Data Template
+#'
+#' @param data_template output of \code{createTrainTestTempate}, nessted tible
+#'   with columns: train_date (date), train_data (tibble), test_data (tibble)
+#' @param models_list named list of model functions. Model function is a
+#'   function with two arguments - train_data and test_data. It outputs list
+#'   with these elements: forecasted_data - tibble similar to test_data but with
+#'   added (forecasted) the respose column, model_object (can be NULL), model
+#'   parameters - tibble with columns "par_name" and "par_value" (trained model
+#'   parameters, can be empty tibble)
+#' @param verbose logical, if TRUE, messages about the progress will be printed
+#'
+#' @return nessted tibble with evaluated model outputs
+#' @export
+evaluateModelsOnDataTemplate <- function(data_template,
+                                         models_list,
+                                         verbose = TRUE) {
+  model_results_data <- tibble()
+
+  for (i_fun in 1:length(models_list)) {
+    model_name <- names(models_list)[i_fun]
+    model_function <- models_list[[i_fun]]
+
+    if (verbose) {
+      message(sprintf("starting evaluation of %s", model_name))
+      time_start <- Sys.time()
+    }
+
+    model_results_data <-
+      model_results_data %>%
+      bind_rows(
+        data_template %>%
+          mutate(
+            model_name = model_name,
+            model_output = map2(.x = train_data, .y = test_data,
+                                .f = model_function),
+            forecasted_data = map(model_output, ~ .$forecasted_data),
+            model_object = map(model_output, ~ .$model_object),
+            model_parameters = map(model_output, ~ .$model_parameters)
+          )
+      )
+
+    if (verbose) {
+      time_diff <- Sys.time() - time_start
+      message(sprintf("evaluation of %s done in %s",
+                      model_name,
+                      format(time_diff)))
+    }
+  }
+
+  model_results_data
+}
+
