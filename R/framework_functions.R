@@ -143,6 +143,7 @@ evaluateModelsOnDataTemplate <- function(data_template,
   model_results_data
 }
 
+
 #' evaluate model on past data at defined data points
 #'
 #' @param input_data data frame including columns 'date'

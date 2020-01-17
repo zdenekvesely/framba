@@ -6,4 +6,4 @@ importFrom(lubridate, days)
 importFrom(lubridate, weeks)
 importFrom(lubridate, '%m+%')
 importFrom(lubridate, '%m-%')
-
+importFrom(lubridate, floor_date)
