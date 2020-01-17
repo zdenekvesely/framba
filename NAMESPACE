@@ -1,6 +1,7 @@
 exportPattern("^[[:alpha:]]+")
 import(dplyr)
 import(purrr)
+import(tidyr)
 importFrom(lubridate, hours)
 importFrom(lubridate, days)
 importFrom(lubridate, weeks)
